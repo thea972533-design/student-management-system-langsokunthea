@@ -1,182 +1,639 @@
+
 {% extends 'base.html' %}
 
 {% block title %}Students - Student Management System{% endblock %}
 
+{% block extra_css %}
+<style>
+:root {
+    --neon-blue: #06b6d4;
+    --neon-purple: #8b5cf6;
+    --dark-bg: #080d1a;
+    --card-bg: #111827;
+    --border-color: #273449;
+    --text-light: #e5e7eb;
+    --muted: #94a3b8;
+}
+
+body {
+    background: var(--dark-bg) !important;
+    color: var(--text-light);
+}
+
+.students-page {
+    padding-top: 30px;
+    padding-bottom: 40px;
+}
+
+/* Header */
+.students-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+    flex-wrap: wrap;
+    padding: 26px;
+    margin-bottom: 25px;
+    border-radius: 18px;
+    background: linear-gradient(135deg, #111827, #172554, #312e81);
+    border: 1px solid rgba(6, 182, 212, 0.45);
+    box-shadow: 0 0 25px rgba(6, 182, 212, 0.1);
+}
+
+.students-header h2 {
+    color: #67e8f9;
+    font-size: clamp(1.35rem, 3vw, 1.9rem);
+    font-weight: 800;
+    margin-bottom: 8px;
+}
+
+.students-header p {
+    color: #cbd5e1;
+    margin: 0;
+    line-height: 1.7;
+}
+
+.btn-neon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 12px 18px;
+    border: none;
+    border-radius: 10px;
+    color: #04111d;
+    background: linear-gradient(90deg, #06b6d4, #818cf8);
+    font-weight: 800;
+    text-decoration: none;
+    transition: 0.25s ease;
+    white-space: nowrap;
+}
+
+.btn-neon:hover {
+    color: #04111d;
+    transform: translateY(-2px);
+    box-shadow: 0 0 20px rgba(6, 182, 212, 0.35);
+}
+
+/* Main card */
+.students-card {
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+}
+
+.students-card-body {
+    padding: 24px;
+}
+
+/* Search */
+.student-search {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 24px;
+}
+
+.student-search input {
+    min-width: 0;
+    flex: 1;
+    padding: 12px 15px;
+    color: #f1f5f9 !important;
+    background: #0b1220 !important;
+    border: 1px solid #374151 !important;
+    border-radius: 10px !important;
+    outline: none;
+}
+
+.student-search input::placeholder {
+    color: #94a3b8;
+}
+
+.student-search input:focus {
+    border-color: var(--neon-blue) !important;
+    box-shadow: 0 0 0 3px rgba(6, 182, 212, 0.13);
+}
+
+.search-btn {
+    padding: 11px 22px;
+    border: none;
+    border-radius: 10px;
+    color: #04111d;
+    background: var(--neon-blue);
+    font-weight: 700;
+}
+
+.clear-btn {
+    display: inline-flex;
+    align-items: center;
+    padding: 10px 14px;
+    color: #cbd5e1;
+    border: 1px solid #475569;
+    border-radius: 10px;
+    text-decoration: none;
+}
+
+/* Table */
+.students-table {
+    width: 100%;
+    margin-bottom: 0;
+    color: var(--text-light) !important;
+    border-color: #273449 !important;
+    vertical-align: middle;
+}
+
+.students-table thead th {
+    padding: 16px 12px;
+    color: #67e8f9 !important;
+    background: #172033 !important;
+    border-bottom: 1px solid #334155;
+    font-size: 0.84rem;
+    font-weight: 700;
+    white-space: nowrap;
+}
+
+.students-table tbody td {
+    padding: 13px 12px;
+    color: #dbe4f0 !important;
+    background: #111827 !important;
+    border-bottom: 1px solid #263246;
+}
+
+.students-table tbody tr {
+    transition: background 0.2s ease;
+}
+
+.students-table tbody tr:hover td {
+    background: #19243a !important;
+}
+
+.student-id-link {
+    color: #67e8f9 !important;
+    font-weight: 800;
+    text-decoration: none;
+}
+
+.student-id-link:hover {
+    color: #c4b5fd !important;
+}
+
+.khmer-name {
+    color: #c4b5fd;
+    font-weight: 700;
+}
+
+.english-name {
+    color: #e2e8f0;
+}
+
+.email-text,
+.city-text {
+    color: #a8b7cb;
+    font-size: 0.88rem;
+}
+
+/* Avatar */
+.student-avatar {
+    width: 42px;
+    height: 42px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    color: #e0f2fe;
+    background: linear-gradient(135deg, #0891b2, #6d28d9);
+    border: 2px solid #475569;
+    font-weight: 800;
+    text-decoration: none;
+    object-fit: cover;
+}
+
+/* Status and GPA */
+.student-badge {
+    display: inline-block;
+    padding: 6px 10px;
+    border-radius: 20px;
+    font-size: 0.78rem;
+    font-weight: 800;
+    white-space: nowrap;
+}
+
+.gpa-excellent {
+    color: #6ee7b7;
+    background: rgba(16, 185, 129, 0.15);
+    border: 1px solid rgba(16, 185, 129, 0.35);
+}
+
+.gpa-good {
+    color: #93c5fd;
+    background: rgba(59, 130, 246, 0.15);
+    border: 1px solid rgba(59, 130, 246, 0.35);
+}
+
+.gpa-pass {
+    color: #67e8f9;
+    background: rgba(6, 182, 212, 0.13);
+    border: 1px solid rgba(6, 182, 212, 0.3);
+}
+
+.gpa-low {
+    color: #cbd5e1;
+    background: rgba(148, 163, 184, 0.12);
+    border: 1px solid rgba(148, 163, 184, 0.25);
+}
+
+.status-active {
+    color: #6ee7b7;
+    background: rgba(16, 185, 129, 0.13);
+    border: 1px solid rgba(16, 185, 129, 0.3);
+}
+
+.status-inactive {
+    color: #cbd5e1;
+    background: rgba(148, 163, 184, 0.12);
+    border: 1px solid rgba(148, 163, 184, 0.25);
+}
+
+/* Action buttons */
+.action-buttons {
+    display: flex;
+    justify-content: flex-end;
+    gap: 6px;
+}
+
+.action-btn {
+    display: inline-block;
+    padding: 7px 10px;
+    border-radius: 7px;
+    font-size: 0.8rem;
+    font-weight: 700;
+    text-decoration: none;
+    transition: 0.2s;
+}
+
+.action-view {
+    color: #67e8f9;
+    background: rgba(6, 182, 212, 0.12);
+    border: 1px solid rgba(6, 182, 212, 0.4);
+}
+
+.action-edit {
+    color: #fcd34d;
+    background: rgba(245, 158, 11, 0.1);
+    border: 1px solid rgba(245, 158, 11, 0.35);
+}
+
+.action-delete {
+    color: #fda4af;
+    background: rgba(244, 63, 94, 0.1);
+    border: 1px solid rgba(244, 63, 94, 0.35);
+}
+
+.action-btn:hover {
+    filter: brightness(1.2);
+    transform: translateY(-1px);
+}
+
+/* Pagination */
+.students-pagination {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 25px;
+}
+
+.students-pagination .page-link {
+    color: #cbd5e1;
+    background: #172033;
+    border: 1px solid #334155;
+    border-radius: 8px;
+    margin: 0 2px;
+}
+
+.students-pagination .page-item.active .page-link {
+    color: #04111d;
+    background: var(--neon-blue);
+    border-color: var(--neon-blue);
+    font-weight: 800;
+}
+
+.students-pagination .page-item.disabled .page-link {
+    color: #64748b;
+    background: #111827;
+}
+
+.students-pagination .page-link:hover {
+    color: #67e8f9;
+    background: #243047;
+    border-color: var(--neon-blue);
+}
+
+/* Empty state */
+.students-empty {
+    padding: 45px 20px;
+    text-align: center;
+    color: #cbd5e1;
+    background: #111827;
+    border: 1px dashed #475569;
+    border-radius: 12px;
+}
+
+.students-empty .empty-icon {
+    display: block;
+    margin-bottom: 12px;
+    font-size: 42px;
+}
+
+.students-empty a {
+    color: #67e8f9;
+    font-weight: 700;
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+    .students-page {
+        padding-top: 15px;
+    }
+
+    .students-header {
+        padding: 20px;
+    }
+
+    .students-card-body {
+        padding: 15px;
+    }
+
+    .student-search {
+        flex-wrap: wrap;
+    }
+
+    .student-search input {
+        flex-basis: 100%;
+    }
+
+    .students-table {
+        min-width: 1250px;
+    }
+
+    .students-header .btn-neon {
+        width: 100%;
+    }
+}
+</style>
+{% endblock %}
+
 {% block content %}
-<div class="row mb-4 align-items-center">
-    <div class="col-md-8">
-        <h2 class="mb-1">🎓 Students Directory / បញ្ជីឈ្មោះនិស្សិត</h2>
-        <p class="text-muted mb-0">Manage registered students, view transcripts, and academic performance</p>
-    </div>
-    <div class="col-md-4 text-end">
-        <a href="{% url 'students:register' %}" class="btn btn-primary shadow-sm">
-            <i class="fas fa-user-plus me-1"></i> ➕ Add New Student
+<div class="container-fluid students-page">
+
+    <!-- Page Header -->
+    <div class="students-header">
+        <div>
+            <h2>🎓 Students Directory</h2>
+            <p>បញ្ជីឈ្មោះនិស្សិត — Manage students and academic performance</p>
+        </div>
+
+        <a href="{% url 'students:register' %}" class="btn-neon">
+            <i class="fas fa-user-plus"></i>
+            Add New Student
         </a>
     </div>
-</div>
 
-<div class="card shadow-sm border-0">
-    <div class="card-body p-4">
-        <form method="get" class="mb-4">
-            <div class="input-group">
-                <span class="input-group-text bg-white"><i class="fas fa-search text-muted"></i></span>
-                <input type="text" name="q" class="form-control" placeholder="Search by Student ID, Khmer Name, Latin Name, or Email..." value="{{ search_query }}">
-                <button class="btn btn-primary px-4" type="submit">Search</button>
+    <!-- Students Table Card -->
+    <div class="students-card">
+        <div class="students-card-body">
+
+            <!-- Search -->
+            <form method="get" class="student-search">
+                <input
+                    type="text"
+                    name="q"
+                    aria-label="Search students"
+                    placeholder="🔍 Search Student ID, Khmer Name, English Name, or Email..."
+                    value="{{ search_query|default:'' }}"
+                >
+
+                <button class="search-btn" type="submit">
+                    <i class="fas fa-search me-1"></i> Search
+                </button>
+
                 {% if search_query %}
-                <a href="{% url 'students:student_list' %}" class="btn btn-outline-secondary">Clear</a>
+                    <a href="{% url 'students:student_list' %}" class="clear-btn">
+                        Clear
+                    </a>
                 {% endif %}
-            </div>
-        </form>
+            </form>
 
-        {% if students %}
-        <div class="table-responsive">
-            <table class="table table-hover align-middle mb-0">
-                <thead class="table-light">
-                    <tr>
-                        <th class="text-center" style="width: 50px;">#</th>
-                        <th class="text-center" style="width: 65px;">Photo</th>
-                        <th style="min-width: 140px;">Student ID</th>
-                        <th style="min-width: 180px;">Khmer Name</th>
-                        <th style="min-width: 170px;">English Name</th>
-                        <th style="min-width: 200px;">Email</th>
-                        <th style="min-width: 130px;">City</th>
-                        <th class="text-center" style="width: 80px;">GPA</th>
-                        <th class="text-center" style="width: 90px;">Status</th>
-                        <th class="text-end" style="min-width: 170px;">Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for student in students %}
-                    <tr>
-                        <!-- 1st Column: Index -->
-                        <td class="text-center text-muted fw-semibold">
-                            {% if page_obj %}
-                                {{ page_obj.start_index|add:forloop.counter0 }}
-                            {% else %}
-                                {{ forloop.counter }}
-                            {% endif %}
-                        </td>
+            {% if students %}
+            <div class="table-responsive">
+                <table class="table students-table align-middle">
+                    <thead>
+                        <tr>
+                            <th class="text-center">#</th>
+                            <th class="text-center">Photo</th>
+                            <th>Student ID</th>
+                            <th>Khmer Name</th>
+                            <th>English Name</th>
+                            <th>Email</th>
+                            <th>City</th>
+                            <th class="text-center">GPA</th>
+                            <th class="text-center">Status</th>
+                            <th class="text-end">Actions</th>
+                        </tr>
+                    </thead>
 
-                        <!-- 2nd Column: Student Picture Avatar (after index) -->
-                        <td class="text-center">
-                            <a href="{% url 'students:student_detail' student.pk %}">
-                                {% if student.profile_picture %}
-                                    <img src="{{ student.profile_picture.url }}" alt="{{ student.get_primary_name }}" class="rounded-circle shadow-sm border" width="40" height="40" style="object-fit: cover;">
+                    <tbody>
+                        {% for student in students %}
+                        <tr>
+                            <!-- Number -->
+                            <td class="text-center">
+                                {% if page_obj %}
+                                    {{ page_obj.start_index|add:forloop.counter0 }}
                                 {% else %}
-                                    <div class="rounded-circle bg-primary text-white d-inline-flex align-items-center justify-content-center fw-bold shadow-sm" style="width: 40px; height: 40px; font-size: 0.95rem;">
-                                        {% if student.khmer_name %}
-                                            {{ student.khmer_name|slice:":1" }}
-                                        {% elif student.user.first_name %}
-                                            {{ student.user.first_name|slice:":1" }}
-                                        {% else %}
-                                            👤
-                                        {% endif %}
-                                    </div>
+                                    {{ forloop.counter }}
                                 {% endif %}
+                            </td>
+
+                            <!-- Avatar -->
+                            <td class="text-center">
+                                <a href="{% url 'students:student_detail' student.pk %}">
+                                    {% if student.profile_picture %}
+                                        <img
+                                            src="{{ student.profile_picture.url }}"
+                                            alt="{{ student.get_primary_name }}"
+                                            class="student-avatar"
+                                        >
+                                    {% else %}
+                                        <span class="student-avatar">
+                                            {% if student.khmer_name %}
+                                                {{ student.khmer_name|slice:":1" }}
+                                            {% elif student.user.first_name %}
+                                                {{ student.user.first_name|slice:":1" }}
+                                            {% else %}
+                                                👤
+                                            {% endif %}
+                                        </span>
+                                    {% endif %}
+                                </a>
+                            </td>
+
+                            <!-- Student ID -->
+                            <td>
+                                <a href="{% url 'students:student_detail' student.pk %}"
+                                   class="student-id-link">
+                                    {{ student.student_id }}
+                                </a>
+                            </td>
+
+                            <!-- Khmer Name -->
+                            <td>
+                                <span class="khmer-name">
+                                    {{ student.khmer_name|default:student.user.get_full_name }}
+                                </span>
+                            </td>
+
+                            <!-- English Name -->
+                            <td>
+                                <span class="english-name">
+                                    {{ student.user.get_full_name|default:student.user.username }}
+                                </span>
+                            </td>
+
+                            <!-- Email -->
+                            <td>
+                                <span class="email-text">{{ student.user.email }}</span>
+                            </td>
+
+                            <!-- City -->
+                            <td>
+                                <span class="city-text">{{ student.city|default:"—" }}</span>
+                            </td>
+
+                            <!-- GPA -->
+                            <td class="text-center">
+                                {% if student.gpa >= 3.5 %}
+                                    <span class="student-badge gpa-excellent">{{ student.gpa }}</span>
+                                {% elif student.gpa >= 3.0 %}
+                                    <span class="student-badge gpa-good">{{ student.gpa }}</span>
+                                {% elif student.gpa >= 2.0 %}
+                                    <span class="student-badge gpa-pass">{{ student.gpa }}</span>
+                                {% else %}
+                                    <span class="student-badge gpa-low">{{ student.gpa }}</span>
+                                {% endif %}
+                            </td>
+
+                            <!-- Status -->
+                            <td class="text-center">
+                                {% if student.is_active %}
+                                    <span class="student-badge status-active">● Active</span>
+                                {% else %}
+                                    <span class="student-badge status-inactive">● Inactive</span>
+                                {% endif %}
+                            </td>
+
+                            <!-- Actions -->
+                            <td>
+                                <div class="action-buttons">
+                                    <a
+                                        href="{% url 'students:student_detail' student.pk %}"
+                                        class="action-btn action-view"
+                                        title="View Student"
+                                    >View</a>
+
+                                    <a
+                                        href="{% url 'students:student_update' student.pk %}"
+                                        class="action-btn action-edit"
+                                        title="Edit Student"
+                                    >Edit</a>
+
+                                    <a
+                                        href="{% url 'students:student_delete' student.pk %}"
+                                        class="action-btn action-delete"
+                                        title="Delete Student"
+                                    >Delete</a>
+                                </div>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Pagination -->
+            {% if page_obj and page_obj.has_other_pages %}
+            <nav aria-label="Student page navigation">
+                <ul class="pagination students-pagination mb-0">
+
+                    {% if page_obj.has_previous %}
+                        <li class="page-item">
+                            <a class="page-link"
+                               href="?page=1{% if search_query %}&amp;q={{ search_query|urlencode }}{% endif %}">
+                                &laquo; First
                             </a>
-                        </td>
+                        </li>
 
-                        <!-- Student ID -->
-                        <td>
-                            <a href="{% url 'students:student_detail' student.pk %}" class="fw-bold text-decoration-none text-dark">
-                                {{ student.student_id }}
+                        <li class="page-item">
+                            <a class="page-link"
+                               href="?page={{ page_obj.previous_page_number }}{% if search_query %}&amp;q={{ search_query|urlencode }}{% endif %}">
+                                Previous
                             </a>
-                        </td>
+                        </li>
+                    {% else %}
+                        <li class="page-item disabled">
+                            <span class="page-link">&laquo; First</span>
+                        </li>
+                        <li class="page-item disabled">
+                            <span class="page-link">Previous</span>
+                        </li>
+                    {% endif %}
 
-                        <!-- Name Column 1: Khmer Name (Primary) -->
-                        <td>
-                            <strong class="text-primary fs-6">{{ student.khmer_name|default:student.user.get_full_name }}</strong>
-                        </td>
+                    <li class="page-item active">
+                        <span class="page-link">
+                            Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
+                            ({{ page_obj.paginator.count }} students)
+                        </span>
+                    </li>
 
-                        <!-- Name Column 2: English Name -->
-                        <td>
-                            <span class="text-secondary">{{ student.user.get_full_name|default:student.user.username }}</span>
-                        </td>
+                    {% if page_obj.has_next %}
+                        <li class="page-item">
+                            <a class="page-link"
+                               href="?page={{ page_obj.next_page_number }}{% if search_query %}&amp;q={{ search_query|urlencode }}{% endif %}">
+                                Next
+                            </a>
+                        </li>
 
-                        <!-- Email -->
-                        <td class="text-muted small">
-                            {{ student.user.email }}
-                        </td>
+                        <li class="page-item">
+                            <a class="page-link"
+                               href="?page={{ page_obj.paginator.num_pages }}{% if search_query %}&amp;q={{ search_query|urlencode }}{% endif %}">
+                                Last &raquo;
+                            </a>
+                        </li>
+                    {% else %}
+                        <li class="page-item disabled">
+                            <span class="page-link">Next</span>
+                        </li>
+                        <li class="page-item disabled">
+                            <span class="page-link">Last &raquo;</span>
+                        </li>
+                    {% endif %}
 
-                        <!-- City -->
-                        <td class="small">
-                            {{ student.city }}
-                        </td>
+                </ul>
+            </nav>
+            {% endif %}
 
-                        <!-- GPA -->
-                        <td class="text-center">
-                            {% if student.gpa >= 3.5 %}
-                                <span class="badge bg-success px-2 py-1">{{ student.gpa }}</span>
-                            {% elif student.gpa >= 3.0 %}
-                                <span class="badge bg-primary px-2 py-1">{{ student.gpa }}</span>
-                            {% elif student.gpa >= 2.0 %}
-                                <span class="badge bg-info text-dark px-2 py-1">{{ student.gpa }}</span>
-                            {% else %}
-                                <span class="badge bg-secondary px-2 py-1">{{ student.gpa }}</span>
-                            {% endif %}
-                        </td>
+            {% else %}
+            <div class="students-empty">
+                <span class="empty-icon">🎓</span>
+                <h5>No Students Found</h5>
+                <p>There are no students matching your search.</p>
+                <a href="{% url 'students:register' %}">
+                    Register a new student
+                </a>
+            </div>
+            {% endif %}
 
-                        <!-- Status -->
-                        <td class="text-center">
-                            {% if student.is_active %}
-                                <span class="badge bg-success">Active</span>
-                            {% else %}
-                                <span class="badge bg-secondary">Inactive</span>
-                            {% endif %}
-                        </td>
-
-                        <!-- Actions -->
-                        <td class="text-end text-nowrap">
-                            <a href="{% url 'students:student_detail' student.pk %}" class="btn btn-sm btn-info text-white" title="View Student">View</a>
-                            <a href="{% url 'students:student_update' student.pk %}" class="btn btn-sm btn-warning" title="Edit Student">Edit</a>
-                            <a href="{% url 'students:student_delete' student.pk %}" class="btn btn-sm btn-danger" title="Delete Student">Delete</a>
-                        </td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
         </div>
-
-        <!-- Pagination Navigation -->
-        {% if page_obj and page_obj.has_other_pages %}
-        <nav aria-label="Student page navigation" class="mt-4">
-            <ul class="pagination justify-content-center mb-0">
-                {% if page_obj.has_previous %}
-                <li class="page-item">
-                    <a class="page-link" href="?page=1{% if search_query %}&q={{ search_query }}{% endif %}">&laquo; First</a>
-                </li>
-                <li class="page-item">
-                    <a class="page-link" href="?page={{ page_obj.previous_page_number }}{% if search_query %}&q={{ search_query }}{% endif %}">Previous</a>
-                </li>
-                {% else %}
-                <li class="page-item disabled"><span class="page-link">&laquo; First</span></li>
-                <li class="page-item disabled"><span class="page-link">Previous</span></li>
-                {% endif %}
-
-                <li class="page-item active">
-                    <span class="page-link">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }} ({{ page_obj.paginator.count }} students)</span>
-                </li>
-
-                {% if page_obj.has_next %}
-                <li class="page-item">
-                    <a class="page-link" href="?page={{ page_obj.next_page_number }}{% if search_query %}&q={{ search_query }}{% endif %}">Next</a>
-                </li>
-                <li class="page-item">
-                    <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}{% if search_query %}&q={{ search_query }}{% endif %}">Last &raquo;</a>
-                </li>
-                {% else %}
-                <li class="page-item disabled"><span class="page-link">Next</span></li>
-                <li class="page-item disabled"><span class="page-link">Last &raquo;</span></li>
-                {% endif %}
-            </ul>
-        </nav>
-        {% endif %}
-
-        {% else %}
-        <div class="alert alert-info mb-0">
-            No students found. <a href="{% url 'students:register' %}">Register a new student</a>
-        </div>
-        {% endif %}
     </div>
 </div>
 {% endblock %}

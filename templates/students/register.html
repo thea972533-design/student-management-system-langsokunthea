@@ -1,192 +1,510 @@
+
 {% extends "base.html" %}
 
 {% block title %}Student Registration - Build Bright University{% endblock %}
 
+{% block extra_css %}
+<style>
+/* ===== Cyberpunk Student Registration ===== */
+:root {
+    --neon-blue: #06b6d4;
+    --neon-purple: #8b5cf6;
+    --dark-bg: #080d1a;
+    --card-bg: #111827;
+    --text-light: #e5e7eb;
+    --muted: #94a3b8;
+}
+
+body {
+    background: var(--dark-bg) !important;
+    color: var(--text-light);
+}
+
+/* Main container */
+.registration-container {
+    max-width: 950px;
+    margin: 35px auto;
+    padding: 15px;
+}
+
+/* Header */
+.registration-header {
+    background: linear-gradient(135deg, #111827, #172554, #312e81);
+    border: 1px solid rgba(6, 182, 212, 0.5);
+    border-radius: 18px;
+    padding: 35px 20px;
+    text-align: center;
+    margin-bottom: 28px;
+    box-shadow: 0 0 25px rgba(6, 182, 212, 0.15);
+}
+
+.registration-header h2 {
+    color: #67e8f9;
+    font-size: clamp(1.5rem, 4vw, 2.2rem);
+    font-weight: 800;
+    margin-bottom: 12px;
+    text-shadow: 0 0 15px rgba(6, 182, 212, 0.4);
+}
+
+.registration-header p {
+    color: #cbd5e1;
+    margin: 0;
+    line-height: 1.7;
+}
+
+/* Form cards */
+.registration-card {
+    background: var(--card-bg);
+    border: 1px solid #273449;
+    border-radius: 16px;
+    overflow: hidden;
+    margin-bottom: 25px;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.25);
+    transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+.registration-card:hover {
+    border-color: rgba(6, 182, 212, 0.55);
+    box-shadow: 0 0 20px rgba(6, 182, 212, 0.08);
+}
+
+.registration-card .card-header {
+    background: #172033;
+    border-bottom: 1px solid #334155;
+    padding: 18px 22px;
+}
+
+.registration-card .card-header h5 {
+    color: #f1f5f9;
+    font-size: 1.05rem;
+    font-weight: 700;
+    margin: 0;
+}
+
+.section-icon {
+    width: 42px;
+    height: 42px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    border-radius: 12px;
+    margin-right: 12px;
+    background: rgba(6, 182, 212, 0.12);
+    border: 1px solid rgba(6, 182, 212, 0.35);
+    font-size: 20px;
+}
+
+.registration-card .card-body {
+    padding: 25px;
+}
+
+/* Labels */
+.registration-card .form-label {
+    display: block;
+    color: #cbd5e1;
+    font-weight: 600;
+    margin-bottom: 9px;
+}
+
+.required-star {
+    color: #fb7185;
+}
+
+/* Django form inputs */
+.registration-card input:not([type="checkbox"]):not([type="radio"]),
+.registration-card select,
+.registration-card textarea {
+    display: block;
+    width: 100%;
+    min-height: 46px;
+    padding: 11px 14px;
+    color: #f1f5f9 !important;
+    background-color: #0b1220 !important;
+    border: 1px solid #374151 !important;
+    border-radius: 10px;
+    outline: none;
+    font-size: 0.95rem;
+    transition: border-color 0.25s, box-shadow 0.25s;
+}
+
+.registration-card textarea {
+    min-height: 100px;
+    resize: vertical;
+}
+
+.registration-card input::placeholder,
+.registration-card textarea::placeholder {
+    color: #64748b;
+}
+
+.registration-card input:focus,
+.registration-card select:focus,
+.registration-card textarea:focus {
+    border-color: var(--neon-blue) !important;
+    box-shadow: 0 0 0 3px rgba(6, 182, 212, 0.15) !important;
+}
+
+.registration-card select option {
+    color: #f1f5f9;
+    background: #111827;
+}
+
+/* Browser date and other native input controls */
+.registration-card input[type="date"] {
+    color-scheme: dark;
+}
+
+/* Help text */
+.registration-card .form-text {
+    color: var(--muted) !important;
+    font-size: 0.8rem;
+    line-height: 1.6;
+}
+
+.registration-card .form-text ul {
+    padding-left: 18px;
+    margin-top: 6px;
+}
+
+/* Errors */
+.registration-card .invalid-feedback {
+    color: #fda4af;
+    font-size: 0.85rem;
+    margin-top: 7px;
+}
+
+.registration-card input.is-invalid,
+.registration-card select.is-invalid,
+.registration-card textarea.is-invalid {
+    border-color: #fb7185 !important;
+}
+
+.registration-error {
+    background: rgba(127, 29, 29, 0.25);
+    border: 1px solid #f87171;
+    color: #fecaca;
+    padding: 18px 22px;
+    border-radius: 12px;
+    margin-bottom: 22px;
+}
+
+.registration-error h6 {
+    color: #fca5a5;
+}
+
+/* Submit button */
+.registration-submit {
+    display: block;
+    width: 100%;
+    padding: 16px 20px;
+    color: #04111d;
+    background: linear-gradient(90deg, #06b6d4, #818cf8, #a78bfa);
+    border: none;
+    border-radius: 12px;
+    font-size: 1.05rem;
+    font-weight: 800;
+    letter-spacing: 0.3px;
+    box-shadow: 0 0 20px rgba(6, 182, 212, 0.2);
+    transition: transform 0.25s, box-shadow 0.25s;
+    cursor: pointer;
+}
+
+.registration-submit:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 0 28px rgba(6, 182, 212, 0.4);
+}
+
+/* Login card */
+.registration-login {
+    background: #111827;
+    border: 1px solid #334155;
+    border-radius: 14px;
+    padding: 22px 15px;
+    text-align: center;
+}
+
+.registration-login p {
+    color: #cbd5e1;
+    margin: 0;
+}
+
+.registration-login a {
+    color: #67e8f9;
+    font-weight: 700;
+    text-decoration: none;
+}
+
+.registration-login a:hover {
+    color: #c4b5fd;
+    text-decoration: underline;
+}
+
+/* Responsive */
+@media (max-width: 576px) {
+    .registration-container {
+        margin: 15px auto;
+        padding: 10px;
+    }
+
+    .registration-header {
+        padding: 25px 15px;
+    }
+
+    .registration-card .card-body {
+        padding: 18px;
+    }
+
+    .registration-card .card-header {
+        padding: 15px;
+    }
+}
+</style>
+{% endblock %}
+
 {% block content %}
-<div class="container py-4">
-    <div class="row justify-content-center">
-        <div class="col-lg-10 col-xl-9">
-            <!-- Header Banner -->
-            <div class="card shadow-sm border-0 mb-4" style="background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%) !important; color: #ffffff !important;">
-                <div class="card-body text-center py-4" style="color: #ffffff !important;">
-                    <h2 class="fw-bold mb-2 text-white" style="color: #ffffff !important;">🎓 Student Registration</h2>
-                    <p class="mb-0 text-white" style="color: #ffffff !important; opacity: 0.95; font-size: 1rem;">Create your student account to access courses, track grades, and view transcripts</p>
+<div class="container registration-container">
+
+    <!-- Header -->
+    <div class="registration-header">
+        <h2>🎓 Student Registration</h2>
+        <p>
+            Create your student account to access courses,
+            track grades, and view transcripts.
+        </p>
+    </div>
+
+    <form method="post" novalidate>
+        {% csrf_token %}
+
+        <!-- General errors -->
+        {% if form.non_field_errors %}
+        <div class="registration-error">
+            <h6 class="fw-bold">Please correct the following errors:</h6>
+            <ul class="mb-0">
+                {% for error in form.non_field_errors %}
+                    <li>{{ error }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+        {% endif %}
+
+        <!-- Step 1: Account -->
+        <div class="registration-card">
+            <div class="card-header">
+                <div class="d-flex align-items-center">
+                    <span class="section-icon">🔐</span>
+                    <h5>Step 1: Account Credentials</h5>
                 </div>
             </div>
 
-            <form method="post" novalidate>
-                {% csrf_token %}
+            <div class="card-body">
+                <div class="row g-4">
 
-                {% if form.non_field_errors %}
-                <div class="alert alert-danger shadow-sm border-0 mb-4">
-                    <h6 class="fw-bold mb-1">Please correct the following errors:</h6>
-                    <ul class="mb-0 ps-3">
-                        {% for error in form.non_field_errors %}
-                            <li>{{ error }}</li>
+                    <div class="col-md-6">
+                        <label for="{{ form.username.id_for_label }}"
+                               class="form-label">
+                            Username <span class="required-star">*</span>
+                        </label>
+                        {{ form.username }}
+                        {% if form.username.help_text %}
+                            <div class="form-text">
+                                {{ form.username.help_text|safe }}
+                            </div>
+                        {% endif %}
+                        {% for error in form.username.errors %}
+                            <div class="invalid-feedback d-block">{{ error }}</div>
                         {% endfor %}
-                    </ul>
-                </div>
-                {% endif %}
-
-                <!-- Section 1: Account & Credentials -->
-                <div class="card shadow-sm border-0 mb-4">
-                    <div class="card-header bg-white py-3 border-bottom">
-                        <div class="d-flex align-items-center">
-                            <span class="badge bg-primary rounded-circle p-2 me-2">🔐</span>
-                            <h5 class="mb-0 fw-bold text-dark">Step 1: Account Credentials</h5>
-                        </div>
                     </div>
-                    <div class="card-body p-4">
-                        <div class="row g-3">
-                            <div class="col-md-6">
-                                <label for="{{ form.username.id_for_label }}" class="form-label fw-semibold">Username <span class="text-danger">*</span></label>
-                                {{ form.username }}
-                                {% if form.username.help_text %}
-                                    <small class="form-text text-muted d-block mt-1">{{ form.username.help_text|safe }}</small>
-                                {% endif %}
-                                {% if form.username.errors %}
-                                    <div class="invalid-feedback d-block">{{ form.username.errors.0 }}</div>
-                                {% endif %}
-                            </div>
 
-                            <div class="col-md-6">
-                                <label for="{{ form.email.id_for_label }}" class="form-label fw-semibold">Email Address <span class="text-danger">*</span></label>
-                                {{ form.email }}
-                                {% if form.email.errors %}
-                                    <div class="invalid-feedback d-block">{{ form.email.errors.0 }}</div>
-                                {% endif %}
-                            </div>
-
-                            <div class="col-md-6">
-                                <label for="{{ form.password1.id_for_label }}" class="form-label fw-semibold">Password <span class="text-danger">*</span></label>
-                                {{ form.password1 }}
-                                {% if form.password1.errors %}
-                                    <div class="invalid-feedback d-block">{{ form.password1.errors.0 }}</div>
-                                {% endif %}
-                            </div>
-
-                            <div class="col-md-6">
-                                <label for="{{ form.password2.id_for_label }}" class="form-label fw-semibold">Confirm Password <span class="text-danger">*</span></label>
-                                {{ form.password2 }}
-                                {% if form.password2.errors %}
-                                    <div class="invalid-feedback d-block">{{ form.password2.errors.0 }}</div>
-                                {% endif %}
-                            </div>
-                        </div>
+                    <div class="col-md-6">
+                        <label for="{{ form.email.id_for_label }}"
+                               class="form-label">
+                            Email Address <span class="required-star">*</span>
+                        </label>
+                        {{ form.email }}
+                        {% for error in form.email.errors %}
+                            <div class="invalid-feedback d-block">{{ error }}</div>
+                        {% endfor %}
                     </div>
-                </div>
 
-                <!-- Section 2: Student Identity & Academic Details -->
-                <div class="card shadow-sm border-0 mb-4">
-                    <div class="card-header bg-white py-3 border-bottom">
-                        <div class="d-flex align-items-center">
-                            <span class="badge bg-info rounded-circle p-2 me-2">🎓</span>
-                            <h5 class="mb-0 fw-bold text-dark">Step 2: Student Profile & Personal Details</h5>
-                        </div>
+                    <div class="col-md-6">
+                        <label for="{{ form.password1.id_for_label }}"
+                               class="form-label">
+                            Password <span class="required-star">*</span>
+                        </label>
+                        {{ form.password1 }}
+                        {% if form.password1.help_text %}
+                            <div class="form-text">
+                                {{ form.password1.help_text|safe }}
+                            </div>
+                        {% endif %}
+                        {% for error in form.password1.errors %}
+                            <div class="invalid-feedback d-block">{{ error }}</div>
+                        {% endfor %}
                     </div>
-                    <div class="card-body p-4">
-                        <div class="row g-3">
-                            <div class="col-md-6">
-                                <label for="{{ form.student_id.id_for_label }}" class="form-label fw-semibold">Student ID <span class="text-danger">*</span></label>
-                                {{ form.student_id }}
-                                {% if form.student_id.errors %}
-                                    <div class="invalid-feedback d-block">{{ form.student_id.errors.0 }}</div>
-                                {% endif %}
-                            </div>
 
-                            <div class="col-md-6">
-                                <label for="{{ form.khmer_name.id_for_label }}" class="form-label fw-semibold text-primary">ឈ្មោះខ្មែរ (Khmer Name - Primary)</label>
-                                {{ form.khmer_name }}
-                                {% if form.khmer_name.errors %}
-                                    <div class="invalid-feedback d-block">{{ form.khmer_name.errors.0 }}</div>
-                                {% endif %}
-                            </div>
-
-                            <div class="col-md-6">
-                                <label for="{{ form.first_name.id_for_label }}" class="form-label fw-semibold">First Name (Latin) <span class="text-danger">*</span></label>
-                                {{ form.first_name }}
-                                {% if form.first_name.errors %}
-                                    <div class="invalid-feedback d-block">{{ form.first_name.errors.0 }}</div>
-                                {% endif %}
-                            </div>
-
-                            <div class="col-md-6">
-                                <label for="{{ form.last_name.id_for_label }}" class="form-label fw-semibold">Last Name (Latin) <span class="text-danger">*</span></label>
-                                {{ form.last_name }}
-                                {% if form.last_name.errors %}
-                                    <div class="invalid-feedback d-block">{{ form.last_name.errors.0 }}</div>
-                                {% endif %}
-                            </div>
-
-                            <div class="col-md-4">
-                                <label for="{{ form.date_of_birth.id_for_label }}" class="form-label fw-semibold">Date of Birth <span class="text-danger">*</span></label>
-                                {{ form.date_of_birth }}
-                                {% if form.date_of_birth.errors %}
-                                    <div class="invalid-feedback d-block">{{ form.date_of_birth.errors.0 }}</div>
-                                {% endif %}
-                            </div>
-
-                            <div class="col-md-4">
-                                <label for="{{ form.gender.id_for_label }}" class="form-label fw-semibold">Gender <span class="text-danger">*</span></label>
-                                {{ form.gender }}
-                                {% if form.gender.errors %}
-                                    <div class="invalid-feedback d-block">{{ form.gender.errors.0 }}</div>
-                                {% endif %}
-                            </div>
-
-                            <div class="col-md-4">
-                                <label for="{{ form.phone_number.id_for_label }}" class="form-label fw-semibold">Phone Number</label>
-                                {{ form.phone_number }}
-                                {% if form.phone_number.errors %}
-                                    <div class="invalid-feedback d-block">{{ form.phone_number.errors.0 }}</div>
-                                {% endif %}
-                            </div>
-
-                            <div class="col-12">
-                                <label for="{{ form.address.id_for_label }}" class="form-label fw-semibold">Street Address <span class="text-danger">*</span></label>
-                                {{ form.address }}
-                                {% if form.address.errors %}
-                                    <div class="invalid-feedback d-block">{{ form.address.errors.0 }}</div>
-                                {% endif %}
-                            </div>
-
-                            <div class="col-md-6">
-                                <label for="{{ form.city.id_for_label }}" class="form-label fw-semibold">City <span class="text-danger">*</span></label>
-                                {{ form.city }}
-                                {% if form.city.errors %}
-                                    <div class="invalid-feedback d-block">{{ form.city.errors.0 }}</div>
-                                {% endif %}
-                            </div>
-
-                            <div class="col-md-6">
-                                <label for="{{ form.country.id_for_label }}" class="form-label fw-semibold">Country <span class="text-danger">*</span></label>
-                                {{ form.country }}
-                                {% if form.country.errors %}
-                                    <div class="invalid-feedback d-block">{{ form.country.errors.0 }}</div>
-                                {% endif %}
-                            </div>
-                        </div>
+                    <div class="col-md-6">
+                        <label for="{{ form.password2.id_for_label }}"
+                               class="form-label">
+                            Confirm Password <span class="required-star">*</span>
+                        </label>
+                        {{ form.password2 }}
+                        {% for error in form.password2.errors %}
+                            <div class="invalid-feedback d-block">{{ error }}</div>
+                        {% endfor %}
                     </div>
-                </div>
 
-                <!-- Submit Button -->
-                <div class="d-grid gap-2 mb-4">
-                    <button type="submit" class="btn btn-primary btn-lg shadow-sm py-3 fw-bold">
-                        <i class="fas fa-user-plus me-2"></i> Complete Student Registration
-                    </button>
                 </div>
-            </form>
-
-            <!-- Login Redirect Card -->
-            <div class="card shadow-sm border-0 text-center py-3 bg-light">
-                <p class="mb-0 text-muted">
-                    Already registered as a student?
-                    <a href="{% url 'login' %}" class="fw-bold text-primary text-decoration-none">
-                        <i class="fas fa-sign-in-alt"></i> Log in here
-                    </a>
-                </p>
             </div>
         </div>
+
+        <!-- Step 2: Student profile -->
+        <div class="registration-card">
+            <div class="card-header">
+                <div class="d-flex align-items-center">
+                    <span class="section-icon">🎓</span>
+                    <h5>Step 2: Student Profile & Personal Details</h5>
+                </div>
+            </div>
+
+            <div class="card-body">
+                <div class="row g-4">
+
+                    <div class="col-md-6">
+                        <label for="{{ form.student_id.id_for_label }}"
+                               class="form-label">
+                            Student ID <span class="required-star">*</span>
+                        </label>
+                        {{ form.student_id }}
+                        {% for error in form.student_id.errors %}
+                            <div class="invalid-feedback d-block">{{ error }}</div>
+                        {% endfor %}
+                    </div>
+
+                    <div class="col-md-6">
+                        <label for="{{ form.khmer_name.id_for_label }}"
+                               class="form-label">
+                            ឈ្មោះខ្មែរ (Khmer Name)
+                        </label>
+                        {{ form.khmer_name }}
+                        {% for error in form.khmer_name.errors %}
+                            <div class="invalid-feedback d-block">{{ error }}</div>
+                        {% endfor %}
+                    </div>
+
+                    <div class="col-md-6">
+                        <label for="{{ form.first_name.id_for_label }}"
+                               class="form-label">
+                            First Name (Latin) <span class="required-star">*</span>
+                        </label>
+                        {{ form.first_name }}
+                        {% for error in form.first_name.errors %}
+                            <div class="invalid-feedback d-block">{{ error }}</div>
+                        {% endfor %}
+                    </div>
+
+                    <div class="col-md-6">
+                        <label for="{{ form.last_name.id_for_label }}"
+                               class="form-label">
+                            Last Name (Latin) <span class="required-star">*</span>
+                        </label>
+                        {{ form.last_name }}
+                        {% for error in form.last_name.errors %}
+                            <div class="invalid-feedback d-block">{{ error }}</div>
+                        {% endfor %}
+                    </div>
+
+                    <div class="col-md-4">
+                        <label for="{{ form.date_of_birth.id_for_label }}"
+                               class="form-label">
+                            Date of Birth <span class="required-star">*</span>
+                        </label>
+                        {{ form.date_of_birth }}
+                        {% for error in form.date_of_birth.errors %}
+                            <div class="invalid-feedback d-block">{{ error }}</div>
+                        {% endfor %}
+                    </div>
+
+                    <div class="col-md-4">
+                        <label for="{{ form.gender.id_for_label }}"
+                               class="form-label">
+                            Gender <span class="required-star">*</span>
+                        </label>
+                        {{ form.gender }}
+                        {% for error in form.gender.errors %}
+                            <div class="invalid-feedback d-block">{{ error }}</div>
+                        {% endfor %}
+                    </div>
+
+                    <div class="col-md-4">
+                        <label for="{{ form.phone_number.id_for_label }}"
+                               class="form-label">
+                            Phone Number
+                        </label>
+                        {{ form.phone_number }}
+                        {% for error in form.phone_number.errors %}
+                            <div class="invalid-feedback d-block">{{ error }}</div>
+                        {% endfor %}
+                    </div>
+
+                    <div class="col-12">
+                        <label for="{{ form.address.id_for_label }}"
+                               class="form-label">
+                            Street Address <span class="required-star">*</span>
+                        </label>
+                        {{ form.address }}
+                        {% for error in form.address.errors %}
+                            <div class="invalid-feedback d-block">{{ error }}</div>
+                        {% endfor %}
+                    </div>
+
+                    <div class="col-md-6">
+                        <label for="{{ form.city.id_for_label }}"
+                               class="form-label">
+                            City <span class="required-star">*</span>
+                        </label>
+                        {{ form.city }}
+                        {% for error in form.city.errors %}
+                            <div class="invalid-feedback d-block">{{ error }}</div>
+                        {% endfor %}
+                    </div>
+
+                    <div class="col-md-6">
+                        <label for="{{ form.country.id_for_label }}"
+                               class="form-label">
+                            Country <span class="required-star">*</span>
+                        </label>
+                        {{ form.country }}
+                        {% for error in form.country.errors %}
+                            <div class="invalid-feedback d-block">{{ error }}</div>
+                        {% endfor %}
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <!-- Submit -->
+        <div class="mb-4">
+            <button type="submit" class="registration-submit">
+                <i class="fas fa-user-plus me-2"></i>
+                Complete Student Registration
+            </button>
+        </div>
+
+    </form>
+
+    <!-- Login link -->
+    <div class="registration-login mb-4">
+        <p>
+            Already registered as a student?
+            <a href="{% url 'login' %}">
+                <i class="fas fa-sign-in-alt me-1"></i>
+                Log in here
+            </a>
+        </p>
     </div>
+
 </div>
 {% endblock %}

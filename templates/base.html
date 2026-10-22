@@ -1,108 +1,635 @@
+
 {% load static %}
-<!DOCTYPE html>
-<html lang="en">
+<!doctype html>
+<html lang="km">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#0f172a">
+
     <title>{% block title %}Student Management System{% endblock %}</title>
-    <link rel="icon" type="image/x-icon" href="{% static 'images/favicon.ico' %}">
-    <link rel="shortcut icon" type="image/x-icon" href="{% static 'images/favicon.ico' %}">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <link rel="icon" type="image/x-icon"
+          href="{% static 'images/favicon.ico' %}">
+
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+          rel="stylesheet">
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+    <!-- Custom CSS -->
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
+
     <style>
+        :root {
+            --primary: #06b6d4;
+            --primary-dark: #0891b2;
+            --secondary: #8b5cf6;
+            --background: #0f172a;
+            --surface: #111c32;
+            --surface-light: #17243b;
+            --text-dark: #e2e8f0;
+            --text-muted: #94a3b8;
+            --border: rgba(6, 182, 212, 0.22);
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
         body {
-            background-color: #f8f9fa;
+            background:
+                radial-gradient(
+                    circle at 10% 0%,
+                    rgba(139, 92, 246, 0.13),
+                    transparent 35%
+                ),
+                radial-gradient(
+                    circle at 90% 10%,
+                    rgba(6, 182, 212, 0.10),
+                    transparent 30%
+                ),
+                var(--background);
+
+            color: var(--text-dark);
+            font-family: Arial, "Khmer OS Battambang", sans-serif;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
         }
-        .navbar {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            box-shadow: 0 2px 4px rgba(0,0,0,.1);
+
+        /* NAVBAR */
+        .main-navbar {
+            background: rgba(15, 23, 42, 0.94);
+            border-bottom: 1px solid var(--border);
+            padding: 13px 0;
+            box-shadow: 0 5px 25px rgba(0, 0, 0, 0.25);
+            position: sticky;
+            top: 0;
+            z-index: 1030;
+            backdrop-filter: blur(16px);
         }
+
         .navbar-brand {
-            font-weight: bold;
-            font-size: 1.3rem;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: #fff !important;
+            font-weight: 800;
+            font-size: 1.05rem;
         }
+
+        .brand-icon {
+            width: 43px;
+            height: 43px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            border-radius: 13px;
+            color: var(--primary);
+            background: rgba(6, 182, 212, 0.12);
+            border: 1px solid rgba(6, 182, 212, 0.5);
+            box-shadow: 0 0 18px rgba(6, 182, 212, 0.15);
+            font-size: 22px;
+        }
+
+        .brand-text {
+            line-height: 1.4;
+        }
+
+        .brand-text small {
+            display: block;
+            color: var(--primary);
+            font-size: 10px;
+            font-weight: 500;
+            letter-spacing: 1.2px;
+            margin-top: 4px;
+        }
+
+        .navbar-toggler {
+            border: 1px solid var(--border);
+        }
+
+        .navbar-toggler:focus {
+            box-shadow: 0 0 0 3px rgba(6, 182, 212, 0.15);
+        }
+
+        .navbar-nav {
+            gap: 5px;
+        }
+
+        .navbar-nav .nav-link {
+            color: #cbd5e1 !important;
+            font-size: 14px;
+            font-weight: 600;
+            padding: 10px 12px !important;
+            border-radius: 9px;
+            transition: 0.25s ease;
+        }
+
+        .navbar-nav .nav-link:hover,
+        .navbar-nav .nav-link:focus {
+            color: var(--primary) !important;
+            background: rgba(6, 182, 212, 0.10);
+            box-shadow: inset 0 0 0 1px var(--border);
+        }
+
+        .nav-icon {
+            margin-right: 6px;
+        }
+
+        /* LOGIN AND REGISTER */
+        .nav-login {
+            border: 1px solid rgba(6, 182, 212, 0.5) !important;
+        }
+
+        .nav-register {
+            color: #fff !important;
+            background: linear-gradient(
+                120deg,
+                #0891b2,
+                #7c3aed
+            ) !important;
+            border-radius: 9px;
+            padding: 10px 15px !important;
+            font-weight: 700 !important;
+        }
+
+        .nav-register:hover {
+            color: #fff !important;
+            box-shadow: 0 0 20px rgba(6, 182, 212, 0.25);
+            transform: translateY(-2px);
+        }
+
+        /* USER MENU */
+        .user-menu {
+            border: 1px solid var(--border);
+            background: var(--surface-light);
+            border-radius: 10px;
+        }
+
+        .dropdown-menu {
+            background: #111c32;
+            border: 1px solid var(--border);
+            border-radius: 13px;
+            padding: 8px;
+            min-width: 200px;
+        }
+
+        .dropdown-item,
+        .dropdown-item-text {
+            color: var(--text-dark);
+        }
+
+        .dropdown-item {
+            padding: 10px 12px;
+            border-radius: 8px;
+        }
+
+        .dropdown-item:hover,
+        .dropdown-item:focus {
+            color: var(--primary);
+            background: rgba(6, 182, 212, 0.12);
+        }
+
+        .dropdown-divider {
+            border-color: var(--border);
+        }
+
+        /* MAIN CONTENT */
+        .main-content {
+            width: 100%;
+            flex: 1;
+            padding-top: 30px;
+            padding-bottom: 30px;
+            color: var(--text-dark);
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            color: #f1f5f9;
+        }
+
+        p, label, li {
+            color: inherit;
+        }
+
+        .text-muted {
+            color: var(--text-muted) !important;
+        }
+
+        a {
+            transition: color 0.2s ease;
+        }
+
+        /* ALERTS */
+        .alert {
+            color: #e2e8f0;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+        }
+
+        .alert-success {
+            border-color: rgba(16, 185, 129, 0.45);
+        }
+
+        .alert-danger {
+            border-color: rgba(244, 63, 94, 0.45);
+        }
+
+        .alert-warning {
+            border-color: rgba(245, 158, 11, 0.45);
+        }
+
+        .btn-close {
+            filter: invert(1);
+        }
+
+        /* CARDS */
         .card {
-            border: none;
-            box-shadow: 0 2px 8px rgba(0,0,0,.1);
-            margin-bottom: 20px;
+            color: var(--text-dark);
+            background: linear-gradient(
+                145deg,
+                rgba(23, 36, 59, 0.98),
+                rgba(17, 28, 50, 0.98)
+            );
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            box-shadow: 0 8px 28px rgba(0, 0, 0, 0.18);
+            transition: 0.25s ease;
         }
+
+        .card:hover {
+            border-color: rgba(139, 92, 246, 0.55);
+            box-shadow: 0 8px 30px rgba(6, 182, 212, 0.08);
+            transform: translateY(-2px);
+        }
+
+        .card-header,
+        .card-footer {
+            color: var(--text-dark);
+            background: rgba(6, 182, 212, 0.05);
+            border-color: var(--border);
+        }
+
+        /* BUTTONS */
+        .btn {
+            border-radius: 9px;
+            font-weight: 600;
+            transition: 0.2s ease;
+        }
+
         .btn-primary {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            border: none;
+            color: #fff;
+            background: linear-gradient(120deg, #0891b2, #7c3aed);
+            border: 0;
         }
-        .btn-primary:hover {
-            background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
+
+        .btn-primary:hover,
+        .btn-primary:focus {
+            color: #fff;
+            background: linear-gradient(120deg, #06b6d4, #8b5cf6);
+            box-shadow: 0 0 18px rgba(6, 182, 212, 0.25);
+            transform: translateY(-1px);
         }
-        .table-hover tbody tr:hover {
-            background-color: #f5f5f5;
+
+        .btn-outline-primary {
+            color: var(--primary);
+            border-color: var(--primary);
+        }
+
+        .btn-outline-primary:hover {
+            color: #fff;
+            background: rgba(6, 182, 212, 0.15);
+            border-color: var(--primary);
+        }
+
+        /* TABLES */
+        .table {
+            --bs-table-bg: transparent;
+            --bs-table-color: #cbd5e1;
+            --bs-table-border-color: rgba(148, 163, 184, 0.15);
+            vertical-align: middle;
+        }
+
+        .table thead th {
+            color: var(--primary);
+            background: rgba(6, 182, 212, 0.08);
+            font-size: 13px;
+            font-weight: 700;
+            padding: 14px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .table tbody td {
+            color: #cbd5e1;
+            padding: 13px 14px;
+        }
+
+        .table-hover > tbody > tr:hover > * {
+            color: #fff;
+            background-color: rgba(6, 182, 212, 0.07);
+        }
+
+        /* FORMS */
+        .form-control,
+        .form-select {
+            color: #e2e8f0;
+            background-color: #0f172a;
+            border: 1px solid rgba(148, 163, 184, 0.25);
+            border-radius: 9px;
+        }
+
+        .form-control::placeholder {
+            color: #64748b;
+        }
+
+        .form-control:focus,
+        .form-select:focus {
+            color: #fff;
+            background-color: #0f172a;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(6, 182, 212, 0.12);
+        }
+
+        .form-label {
+            color: #cbd5e1;
+            font-weight: 600;
+        }
+
+        /* PAGINATION */
+        .pagination .page-link {
+            color: var(--primary);
+            background: var(--surface);
+            border-color: var(--border);
+        }
+
+        .pagination .page-item.active .page-link {
+            color: #fff;
+            background: linear-gradient(120deg, #0891b2, #7c3aed);
+            border-color: transparent;
+        }
+
+        /* FOOTER */
+        .main-footer {
+            background: rgba(8, 15, 30, 0.85);
+            border-top: 1px solid var(--border);
+            padding: 24px 0;
+            margin-top: 25px;
+        }
+
+        .footer-title {
+            color: #e2e8f0;
+            font-weight: 700;
+            margin-bottom: 6px;
+        }
+
+        .footer-text {
+            color: var(--text-muted);
+            font-size: 13px;
+            margin-bottom: 0;
+        }
+
+        .footer-icon {
+            color: var(--primary);
+            margin-right: 5px;
+        }
+
+        /* RESPONSIVE */
+        @media (max-width: 991px) {
+            .navbar-collapse {
+                padding-top: 15px;
+            }
+
+            .navbar-nav {
+                align-items: stretch !important;
+            }
+
+            .navbar-nav .nav-link {
+                padding: 11px 14px !important;
+            }
+
+            .nav-register,
+            .nav-login {
+                display: block;
+                text-align: center;
+                margin-top: 5px;
+            }
+
+            .user-menu {
+                display: inline-block;
+                margin-top: 5px;
+            }
+
+            .main-content {
+                padding-top: 20px;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .navbar-brand {
+                font-size: 0.85rem;
+            }
+
+            .brand-icon {
+                width: 38px;
+                height: 38px;
+                font-size: 19px;
+            }
+
+            .main-content {
+                padding-top: 16px;
+            }
         }
     </style>
+
     {% block extra_css %}{% endblock %}
 </head>
+
 <body>
-    <nav class="navbar navbar-expand-lg navbar-dark">
-        <div class="container">
-            <a class="navbar-brand" href="{% url 'home' %}">📚 Student Management System</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ms-auto align-items-center">
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'students:student_list' %}">Students</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'courses:course_list' %}">Courses</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'enrollments:enrollment_list' %}">Enrollments</a>
-                    </li>
-                    {% if user.is_authenticated %}
-                    <li class="nav-item">
-                        <a class="nav-link" href="/admin/">Admin Panel</a>
-                    </li>
-                    <li class="nav-item dropdown ms-lg-2">
-                        <a class="nav-link dropdown-toggle btn btn-sm btn-outline-light text-white px-3" href="#" role="button" data-bs-toggle="dropdown">
-                            👤 {{ user.username }}
-                        </a>
-                        <ul class="dropdown-menu dropdown-menu-end shadow-sm">
-                            <li><span class="dropdown-item-text text-muted small">{{ user.email|default:"No email" }}</span></li>
-                            <li><hr class="dropdown-divider"></li>
-                            <li><a class="dropdown-item" href="{% url 'logout' %}"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
-                        </ul>
-                    </li>
-                    {% else %}
-                    <li class="nav-item ms-lg-2">
-                        <a class="nav-link btn btn-sm btn-outline-light text-white px-3 me-2" href="{% url 'login' %}">Login</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="btn btn-sm btn-light text-primary fw-bold px-3" href="{% url 'students:register' %}">Register</a>
-                    </li>
-                    {% endif %}
-                </ul>
-            </div>
-        </div>
-    </nav>
 
-    <div class="container mt-4">
-        {% if messages %}
-        <div class="alert alert-info alert-dismissible fade show" role="alert">
-            {% for message in messages %}
-                <div>{{ message }}</div>
-            {% endfor %}
-            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-        </div>
-        {% endif %}
+<!-- NAVBAR -->
+<nav class="navbar navbar-expand-lg navbar-dark main-navbar">
+    <div class="container">
 
-        {% block content %}{% endblock %}
+        <a class="navbar-brand" href="{% url 'home' %}">
+            <span class="brand-icon">🎓</span>
+
+            <span class="brand-text">
+                Student Management System Lang sokunthea
+                <small>BUILD BRIGHT UNIVERSITY</small>
+            </span>
+        </a>
+
+        <button
+            class="navbar-toggler"
+            type="button"
+            data-bs-toggle="collapse"
+            data-bs-target="#navbarNav"
+            aria-controls="navbarNav"
+            aria-expanded="false"
+            aria-label="Toggle navigation"
+        >
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ms-auto align-items-lg-center">
+
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'home' %}">
+                        <i class="fas fa-house nav-icon"></i>Home
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link"
+                       href="{% url 'students:student_list' %}">
+                        <i class="fas fa-user-graduate nav-icon"></i>Students
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link"
+                       href="{% url 'courses:course_list' %}">
+                        <i class="fas fa-book-open nav-icon"></i>Courses
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link"
+                       href="{% url 'enrollments:enrollment_list' %}">
+                        <i class="fas fa-clipboard-list nav-icon"></i>Enrollments
+                    </a>
+                </li>
+
+                {% if user.is_authenticated %}
+
+                <li class="nav-item">
+                    <a class="nav-link" href="/admin/">
+                        <i class="fas fa-gauge-high nav-icon"></i>Admin
+                    </a>
+                </li>
+
+                <li class="nav-item dropdown ms-lg-2">
+                    <a
+                        class="nav-link dropdown-toggle user-menu"
+                        href="#"
+                        role="button"
+                        data-bs-toggle="dropdown"
+                        aria-expanded="false"
+                    >
+                        <i class="fas fa-circle-user nav-icon"></i>
+                        {{ user.username }}
+                    </a>
+
+                    <ul class="dropdown-menu dropdown-menu-end shadow">
+                        <li>
+                            <span class="dropdown-item-text small">
+                                <i class="fas fa-envelope me-2"></i>
+                                {{ user.email|default:"No email" }}
+                            </span>
+                        </li>
+
+                        <li><hr class="dropdown-divider"></li>
+
+                        <li>
+                            <a class="dropdown-item text-danger"
+                               href="{% url 'logout' %}">
+                                <i class="fas fa-right-from-bracket me-2"></i>
+                                Logout
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+
+                {% else %}
+
+                <li class="nav-item ms-lg-2">
+                    <a class="nav-link nav-login"
+                       href="{% url 'login' %}">
+                        <i class="fas fa-right-to-bracket me-1"></i>
+                        Login
+                    </a>
+                </li>
+
+                <li class="nav-item ms-lg-2">
+                    <a class="nav-link nav-register"
+                       href="{% url 'students:register' %}">
+                        <i class="fas fa-user-plus me-1"></i>
+                        Register
+                    </a>
+                </li>
+
+                {% endif %}
+
+            </ul>
+        </div>
     </div>
+</nav>
 
-    <footer class="bg-light text-center py-4 mt-5">
-        <p class="text-muted">© 2026 Build Bright University - Student Management System</p>
-    </footer>
+<!-- MAIN CONTENT -->
+<main class="container main-content">
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="{% static 'js/main.js' %}"></script>
-    {% block extra_js %}{% endblock %}
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags|default:'info' }} alert-dismissible fade show"
+                 role="alert">
+                <i class="fas fa-circle-info me-2"></i>
+                {{ message }}
+
+                <button type="button"
+                        class="btn-close"
+                        data-bs-dismiss="alert"
+                        aria-label="Close"></button>
+            </div>
+        {% endfor %}
+    {% endif %}
+
+    {% block content %}{% endblock %}
+
+</main>
+
+<!-- FOOTER -->
+<footer class="main-footer">
+    <div class="container">
+        <div class="row align-items-center gy-3">
+
+            <div class="col-12 col-md-6 text-center text-md-start">
+                <div class="footer-title">
+                    <i class="fas fa-graduation-cap footer-icon"></i>
+                    Build Bright University
+                </div>
+
+                <p class="footer-text">
+                    Student Management System
+                </p>
+            </div>
+
+            <div class="col-12 col-md-6 text-center text-md-end">
+                <p class="footer-text">
+                    © {% now "Y" %} Build Bright University.
+                    All rights reserved.
+                </p>
+            </div>
+
+        </div>
+    </div>
+</footer>
+
+<!-- JAVASCRIPT -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="{% static 'js/main.js' %}"></script>
+
+{% block extra_js %}{% endblock %}
+
 </body>
 </html>
